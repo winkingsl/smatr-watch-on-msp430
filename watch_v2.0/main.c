@@ -19,7 +19,7 @@
 #define PIN_SCE 				BIT3						// P1.3  CS
 #define PIN_SDIN 				BIT4						// P1.4  SDA //mosi
 #define PIN_SCLK 				BIT1						// P3.1  SCK
-#define PIN_LED 				BIT0						// P3.0  подсветка дисплея
+#define PIN_LED 				BIT0						// P3.0  РїРѕРґСЃРІРµС‚РєР° РґРёСЃРїР»РµСЏ
 #define LCD_C 					0							// Command
 #define LCD_D 					1							// Data
 /* Buttons & vibro */
@@ -38,103 +38,103 @@ unsigned char RX[16];
 unsigned char TX[17] = 		{  	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 						 	 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 	   };
 
-#define max_menu_item 			7		// количество строк в меню
+#define max_menu_item 			7		// РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє РІ РјРµРЅСЋ
 
 unsigned int 	tx_data_bt;           	// UART Tx data
 
-unsigned char 	bat_sost = 0, 			// состояние батареи 0-100% - 4-10%
-				current_menu_item = 1, 	// текущий пункт меню
-				current_sub_menu_item = 0, // текущий пункт подменю
-				screens = 0,			// количество экранов многоэкранного сообщения (максимум 3(счет с 0, значит 2))
-				black_text = 0,			// инверсия шрифта
+unsigned char 	bat_sost = 0, 			// СЃРѕСЃС‚РѕСЏРЅРёРµ Р±Р°С‚Р°СЂРµРё 0-100% - 4-10%
+				current_menu_item = 1, 	// С‚РµРєСѓС‰РёР№ РїСѓРЅРєС‚ РјРµРЅСЋ
+				current_sub_menu_item = 0, // С‚РµРєСѓС‰РёР№ РїСѓРЅРєС‚ РїРѕРґРјРµРЅСЋ
+				screens = 0,			// РєРѕР»РёС‡РµСЃС‚РІРѕ СЌРєСЂР°РЅРѕРІ РјРЅРѕРіРѕСЌРєСЂР°РЅРЅРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ (РјР°РєСЃРёРјСѓРј 3(СЃС‡РµС‚ СЃ 0, Р·РЅР°С‡РёС‚ 2))
+				black_text = 0,			// РёРЅРІРµСЂСЃРёСЏ С€СЂРёС„С‚Р°
 				current_screen = 0, 	// 0 - main watch, 1 - sms|call, 2 - setting_main, 3 - submenu, 4 - multiscreen text;
-				char_count = 0,			// количество символов сообщения
-				count_sec = 1,			// счетчик "секунд"
-				count_sec2 = 1,			// счетчик "секунд"
-				text_screen = 0; 		// текущий экран многоэкранного сообщения
+				char_count = 0,			// РєРѕР»РёС‡РµСЃС‚РІРѕ СЃРёРјРІРѕР»РѕРІ СЃРѕРѕР±С‰РµРЅРёСЏ
+				count_sec = 1,			// СЃС‡РµС‚С‡РёРє "СЃРµРєСѓРЅРґ"
+				count_sec2 = 1,			// СЃС‡РµС‚С‡РёРє "СЃРµРєСѓРЅРґ"
+				text_screen = 0; 		// С‚РµРєСѓС‰РёР№ СЌРєСЂР°РЅ РјРЅРѕРіРѕСЌРєСЂР°РЅРЅРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ
 
-int 			i_timer = 0; 			// счетчик таймера режима низкого энергопотребления
+int 			i_timer = 0; 			// СЃС‡РµС‚С‡РёРє С‚Р°Р№РјРµСЂР° СЂРµР¶РёРјР° РЅРёР·РєРѕРіРѕ СЌРЅРµСЂРіРѕРїРѕС‚СЂРµР±Р»РµРЅРёСЏ
 
-unsigned char	edit_time = 0, 			// редактируются настройки даты/времени?
-				get_time = 0,			// получить время с ЧРВ и записать во FLASH или считать из FLASH?
-				set_time = 0, 			// записать время на ЧРВ?
-				check_akk = 0, 			// проверить состояние аккумулятора?
-				v2_5 = 0,				// Vref для ADC10 - ref 2.5V?
-				bt_on = 0, 				// BT включен?
-				bt_connect = 0, 		// BT подключен?
-				time_from_phone = 0,	// запросить время с телефона?
-				multiscreen = 0,		// многоэкранное сообщение?
-				dot_show = 0,			// отображать точки?
-				P2_int = 0,				// прерывание от P2
-				TA1_int = 0,			// прерывание от TA1
-				ADC_int = 0,			// прерывание от ADC
-				btn_pressed = 0,		// 0-ничего, 1,2,3 - up, cent, down; 4,5,6 - long up, cent, down;
+unsigned char	edit_time = 0, 			// СЂРµРґР°РєС‚РёСЂСѓСЋС‚СЃСЏ РЅР°СЃС‚СЂРѕР№РєРё РґР°С‚С‹/РІСЂРµРјРµРЅРё?
+				get_time = 0,			// РїРѕР»СѓС‡РёС‚СЊ РІСЂРµРјСЏ СЃ Р§Р Р’ Рё Р·Р°РїРёСЃР°С‚СЊ РІРѕ FLASH РёР»Рё СЃС‡РёС‚Р°С‚СЊ РёР· FLASH?
+				set_time = 0, 			// Р·Р°РїРёСЃР°С‚СЊ РІСЂРµРјСЏ РЅР° Р§Р Р’?
+				check_akk = 0, 			// РїСЂРѕРІРµСЂРёС‚СЊ СЃРѕСЃС‚РѕСЏРЅРёРµ Р°РєРєСѓРјСѓР»СЏС‚РѕСЂР°?
+				v2_5 = 0,				// Vref РґР»СЏ ADC10 - ref 2.5V?
+				bt_on = 0, 				// BT РІРєР»СЋС‡РµРЅ?
+				bt_connect = 0, 		// BT РїРѕРґРєР»СЋС‡РµРЅ?
+				time_from_phone = 0,	// Р·Р°РїСЂРѕСЃРёС‚СЊ РІСЂРµРјСЏ СЃ С‚РµР»РµС„РѕРЅР°?
+				multiscreen = 0,		// РјРЅРѕРіРѕСЌРєСЂР°РЅРЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ?
+				dot_show = 0,			// РѕС‚РѕР±СЂР°Р¶Р°С‚СЊ С‚РѕС‡РєРё?
+				P2_int = 0,				// РїСЂРµСЂС‹РІР°РЅРёРµ РѕС‚ P2
+				TA1_int = 0,			// РїСЂРµСЂС‹РІР°РЅРёРµ РѕС‚ TA1
+				ADC_int = 0,			// РїСЂРµСЂС‹РІР°РЅРёРµ РѕС‚ ADC
+				btn_pressed = 0,		// 0-РЅРёС‡РµРіРѕ, 1,2,3 - up, cent, down; 4,5,6 - long up, cent, down;
 				string_ready = 0,		//
 				e_save = 0,				// LPM
-				call_true = 0;			// входящий вызов
+				call_true = 0;			// РІС…РѕРґСЏС‰РёР№ РІС‹Р·РѕРІ
 
-char inputString[314] = "";				// строка сообщения из UART
+char inputString[314] = "";				// СЃС‚СЂРѕРєР° СЃРѕРѕР±С‰РµРЅРёСЏ РёР· UART
 
 const unsigned char Main_menu[][17] =
-			  { "Время           ",
-				"Яркость         ",
-				"Контрастность   ",
-				"Время выключения",
-				"Вкл / выкл bt   ",
-				"Дата            ",
-				"Время с телефона" }; 	// меню настроек
+			  { "Р’СЂРµРјСЏ           ",
+				"РЇСЂРєРѕСЃС‚СЊ         ",
+				"РљРѕРЅС‚СЂР°СЃС‚РЅРѕСЃС‚СЊ   ",
+				"Р’СЂРµРјСЏ РІС‹РєР»СЋС‡РµРЅРёСЏ",
+				"Р’РєР» / РІС‹РєР» bt   ",
+				"Р”Р°С‚Р°            ",
+				"Р’СЂРµРјСЏ СЃ С‚РµР»РµС„РѕРЅР°" }; 	// РјРµРЅСЋ РЅР°СЃС‚СЂРѕРµРє
 
-										// ВО FLASH'е
+										// Р’Рћ FLASH'Рµ
 
-int 									// переменные часов и календаря
-				h10 = 1, 	h1 = 7, 	// часы
-				m10 = 1, 	m1 = 3, 	// минуты
-				s10 = 5, 	s1 = 7, 	// секунды
-				d10 = 1, 	d1 = 3, 	// день
-				mo10 = 0,	mo1 = 3, 	// месяц
-				ye10 = 1, 	ye1 = 4, 	// год
-				dw = 4;					// день недели
+int 									// РїРµСЂРµРјРµРЅРЅС‹Рµ С‡Р°СЃРѕРІ Рё РєР°Р»РµРЅРґР°СЂСЏ
+				h10 = 1, 	h1 = 7, 	// С‡Р°СЃС‹
+				m10 = 1, 	m1 = 3, 	// РјРёРЅСѓС‚С‹
+				s10 = 5, 	s1 = 7, 	// СЃРµРєСѓРЅРґС‹
+				d10 = 1, 	d1 = 3, 	// РґРµРЅСЊ
+				mo10 = 0,	mo1 = 3, 	// РјРµСЃСЏС†
+				ye10 = 1, 	ye1 = 4, 	// РіРѕРґ
+				dw = 4;					// РґРµРЅСЊ РЅРµРґРµР»Рё
 
-int 			contrast = 24, 			// контрастность (0-31)
-				pwm_width = 0x0eff, 	// яркость 0x00ff - 0x0fff;
-				timer_off = 80;			// время до выключения
+int 			contrast = 24, 			// РєРѕРЅС‚СЂР°СЃС‚РЅРѕСЃС‚СЊ (0-31)
+				pwm_width = 0x0eff, 	// СЏСЂРєРѕСЃС‚СЊ 0x00ff - 0x0fff;
+				timer_off = 80;			// РІСЂРµРјСЏ РґРѕ РІС‹РєР»СЋС‡РµРЅРёСЏ
 
 /* Forward references */
 void init_watch(void);
 
-void check_akkum(void);				// проверка состояния аккумулятора
-void check_bluetooth(void);			// проверка состояния BT
+void check_akkum(void);				// РїСЂРѕРІРµСЂРєР° СЃРѕСЃС‚РѕСЏРЅРёСЏ Р°РєРєСѓРјСѓР»СЏС‚РѕСЂР°
+void check_bluetooth(void);			// РїСЂРѕРІРµСЂРєР° СЃРѕСЃС‚РѕСЏРЅРёСЏ BT
 
-void uart_tx_bt(char c);			// отправка символа по BT
-void uart_puts_bt(char const* s);	// отправка строки по BT
+void uart_tx_bt(char c);			// РѕС‚РїСЂР°РІРєР° СЃРёРјРІРѕР»Р° РїРѕ BT
+void uart_puts_bt(char const* s);	// РѕС‚РїСЂР°РІРєР° СЃС‚СЂРѕРєРё РїРѕ BT
 
-void get_time_from_rtc(void);		// получение времени с ЧРВ и запись во FLASH
-void set_time_to_rtc(void);			// запись времени на ЧРВ
+void get_time_from_rtc(void);		// РїРѕР»СѓС‡РµРЅРёРµ РІСЂРµРјРµРЅРё СЃ Р§Р Р’ Рё Р·Р°РїРёСЃСЊ РІРѕ FLASH
+void set_time_to_rtc(void);			// Р·Р°РїРёСЃСЊ РІСЂРµРјРµРЅРё РЅР° Р§Р Р’
 
-void LcdCharacter(char character);						// вывести символ
-void LcdClear(void);									// отчистить весь экран
-void clear_1(void);										// отчистить экран, кроме статус бара
-void Lcd_set_pos(unsigned char c, unsigned char r);		// установить позицию в символах на строку
-void Lcd_set_pos_pix(unsigned char c, unsigned char r);	// установить позицию в пикселях на строку
-void lcd_contrast(unsigned char contrast2);				// установить контрастность экрана
-void lcd_dig(unsigned char num, unsigned char pos_x, unsigned char pos_y);	// цифры часов
-void lcd_dot(unsigned char num, unsigned char pos_x, unsigned char pos_y);	// двоеточия часов
-void LcdWrite(unsigned char dc, unsigned char data);	// отправка комманды/данных на экран
-void LcdString(char *characters);						// вывести строку
-void lcd_show_sms(unsigned char a);						// значек смс
-void lcd_show_call(unsigned char a);					// значек звонка
-void lcd_show_bt(unsigned char a);						// значек BT
-void lcd_show_bat(unsigned char proc);					// значек аккумулятора
-void lcd_set_time_big(void);							// вывести большие часы
-void lcd_set_time_small(void);							// вывести малые часы (в статус баре)
-void lcd_show_main(void);								// показать главный экран (дата и большие часы)
+void LcdCharacter(char character);						// РІС‹РІРµСЃС‚Рё СЃРёРјРІРѕР»
+void LcdClear(void);									// РѕС‚С‡РёСЃС‚РёС‚СЊ РІРµСЃСЊ СЌРєСЂР°РЅ
+void clear_1(void);										// РѕС‚С‡РёСЃС‚РёС‚СЊ СЌРєСЂР°РЅ, РєСЂРѕРјРµ СЃС‚Р°С‚СѓСЃ Р±Р°СЂР°
+void Lcd_set_pos(unsigned char c, unsigned char r);		// СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РїРѕР·РёС†РёСЋ РІ СЃРёРјРІРѕР»Р°С… РЅР° СЃС‚СЂРѕРєСѓ
+void Lcd_set_pos_pix(unsigned char c, unsigned char r);	// СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РїРѕР·РёС†РёСЋ РІ РїРёРєСЃРµР»СЏС… РЅР° СЃС‚СЂРѕРєСѓ
+void lcd_contrast(unsigned char contrast2);				// СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РєРѕРЅС‚СЂР°СЃС‚РЅРѕСЃС‚СЊ СЌРєСЂР°РЅР°
+void lcd_dig(unsigned char num, unsigned char pos_x, unsigned char pos_y);	// С†РёС„СЂС‹ С‡Р°СЃРѕРІ
+void lcd_dot(unsigned char num, unsigned char pos_x, unsigned char pos_y);	// РґРІРѕРµС‚РѕС‡РёСЏ С‡Р°СЃРѕРІ
+void LcdWrite(unsigned char dc, unsigned char data);	// РѕС‚РїСЂР°РІРєР° РєРѕРјРјР°РЅРґС‹/РґР°РЅРЅС‹С… РЅР° СЌРєСЂР°РЅ
+void LcdString(char *characters);						// РІС‹РІРµСЃС‚Рё СЃС‚СЂРѕРєСѓ
+void lcd_show_sms(unsigned char a);						// Р·РЅР°С‡РµРє СЃРјСЃ
+void lcd_show_call(unsigned char a);					// Р·РЅР°С‡РµРє Р·РІРѕРЅРєР°
+void lcd_show_bt(unsigned char a);						// Р·РЅР°С‡РµРє BT
+void lcd_show_bat(unsigned char proc);					// Р·РЅР°С‡РµРє Р°РєРєСѓРјСѓР»СЏС‚РѕСЂР°
+void lcd_set_time_big(void);							// РІС‹РІРµСЃС‚Рё Р±РѕР»СЊС€РёРµ С‡Р°СЃС‹
+void lcd_set_time_small(void);							// РІС‹РІРµСЃС‚Рё РјР°Р»С‹Рµ С‡Р°СЃС‹ (РІ СЃС‚Р°С‚СѓСЃ Р±Р°СЂРµ)
+void lcd_show_main(void);								// РїРѕРєР°Р·Р°С‚СЊ РіР»Р°РІРЅС‹Р№ СЌРєСЂР°РЅ (РґР°С‚Р° Рё Р±РѕР»СЊС€РёРµ С‡Р°СЃС‹)
 
-void menu_setting(unsigned char submenu);				// меню
-void down_sub_menu(void);								// передвижение по меню
-void up_sub_menu(void);									//		и изменения в подменю
-void parse_string(void);								// разбор принятой строки
+void menu_setting(unsigned char submenu);				// РјРµРЅСЋ
+void down_sub_menu(void);								// РїРµСЂРµРґРІРёР¶РµРЅРёРµ РїРѕ РјРµРЅСЋ
+void up_sub_menu(void);									//		Рё РёР·РјРµРЅРµРЅРёСЏ РІ РїРѕРґРјРµРЅСЋ
+void parse_string(void);								// СЂР°Р·Р±РѕСЂ РїСЂРёРЅСЏС‚РѕР№ СЃС‚СЂРѕРєРё
 //
-// прерывания
+// РїСЂРµСЂС‹РІР°РЅРёСЏ
 //
 #pragma vector=TIMER0_A0_VECTOR
 __interrupt void TIMER0_A0_isr(void) {}
@@ -151,14 +151,14 @@ __interrupt void P1_isr(void) {}
 #pragma vector=NMI_VECTOR
 __interrupt void NMI_isr(void) {}
 
-#pragma vector=TIMER1_A0_VECTOR						// прием данных по UART от BT
+#pragma vector=TIMER1_A0_VECTOR						// РїСЂРёРµРј РґР°РЅРЅС‹С… РїРѕ UART РѕС‚ BT
 __interrupt void TIMER1_A0_isr(void) {
 	static unsigned char rx_bitc1 = 8; 			 	// Rx bit count register
 	static unsigned char rx_data1;      			// Rx data register
 
 	BIT_CLR(IE1, WDTIE);
 	BIT_CLR(TA1CCTL2, CCIE);
-	BIT_CLR(ADC10CTL0, ADC10IE);					//отключение прерываний
+	BIT_CLR(ADC10CTL0, ADC10IE);					//РѕС‚РєР»СЋС‡РµРЅРёРµ РїСЂРµСЂС‹РІР°РЅРёР№
 
 	TA1CCR0 += BT_BITTIME;         					// add offset to CCR
 	if (TA1CCTL0 & CAP) {
@@ -171,19 +171,19 @@ __interrupt void TIMER1_A0_isr(void) {
 		}
 		if (--rx_bitc1 == 0) {
 			BIT_SET(TA1CCTL0, CAP);
-			if ((char_count == 0) && ((rx_data1 < 0x31) || (rx_data1 > 0x36))) {	// отбрасываем мусор
+			if ((char_count == 0) && ((rx_data1 < 0x31) || (rx_data1 > 0x36))) {	// РѕС‚Р±СЂР°СЃС‹РІР°РµРј РјСѓСЃРѕСЂ
 			} else {
-				if (rx_data1 == '\n')						// заменяем перенос строки на пробел
-					rx_data1 = ' ';							// экономим место на экране
+				if (rx_data1 == '\n')						// Р·Р°РјРµРЅСЏРµРј РїРµСЂРµРЅРѕСЃ СЃС‚СЂРѕРєРё РЅР° РїСЂРѕР±РµР»
+					rx_data1 = ' ';							// СЌРєРѕРЅРѕРјРёРј РјРµСЃС‚Рѕ РЅР° СЌРєСЂР°РЅРµ
 				inputString[char_count++] = rx_data1;
-				if (rx_data1 == 0x00) {						// конец передаваемого сообщения
-					BIT_SET(TACCTL2, OUTMOD_6);				// включение подсветки
-					i_timer = 0;							// обнуление счетчика таймера режима низкого энергопотребления
-					if (char_count > 105) {					// сообщение не поместится на один экран
+				if (rx_data1 == 0x00) {						// РєРѕРЅРµС† РїРµСЂРµРґР°РІР°РµРјРѕРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ
+					BIT_SET(TACCTL2, OUTMOD_6);				// РІРєР»СЋС‡РµРЅРёРµ РїРѕРґСЃРІРµС‚РєРё
+					i_timer = 0;							// РѕР±РЅСѓР»РµРЅРёРµ СЃС‡РµС‚С‡РёРєР° С‚Р°Р№РјРµСЂР° СЂРµР¶РёРјР° РЅРёР·РєРѕРіРѕ СЌРЅРµСЂРіРѕРїРѕС‚СЂРµР±Р»РµРЅРёСЏ
+					if (char_count > 105) {					// СЃРѕРѕР±С‰РµРЅРёРµ РЅРµ РїРѕРјРµСЃС‚РёС‚СЃСЏ РЅР° РѕРґРёРЅ СЌРєСЂР°РЅ
 						multiscreen = 1;
 						text_screen = 0;
 						screens = 1;
-						if (char_count > 208)				// сообщение не поместится на два экрана
+						if (char_count > 208)				// СЃРѕРѕР±С‰РµРЅРёРµ РЅРµ РїРѕРјРµСЃС‚РёС‚СЃСЏ РЅР° РґРІР° СЌРєСЂР°РЅР°
 							screens = 2;
 					} else
 						multiscreen = 0;
@@ -193,10 +193,10 @@ __interrupt void TIMER1_A0_isr(void) {
 					string_ready = 1;
 					BIT_SET(IE1, WDTIE);
 					BIT_SET(TA1CCTL2, CCIE);
-					BIT_SET(ADC10CTL0, ADC10IE);			// включение прерываний
+					BIT_SET(ADC10CTL0, ADC10IE);			// РІРєР»СЋС‡РµРЅРёРµ РїСЂРµСЂС‹РІР°РЅРёР№
 					char_count = 0;
 					e_save = 0;
-					__bic_SR_register_on_exit(LPM3_bits);	// выход из режима энергосбережения
+					__bic_SR_register_on_exit(LPM3_bits);	// РІС‹С…РѕРґ РёР· СЂРµР¶РёРјР° СЌРЅРµСЂРіРѕСЃР±РµСЂРµР¶РµРЅРёСЏ
 				}
 			}
 			rx_bitc1 = 8;            // re-load bit counter
@@ -209,11 +209,11 @@ __interrupt void TIMER1_A1_isr(void) {
 	static unsigned char tx_bitc1 = 10;  			// Tx bit count register
 
 	switch (__even_in_range(TA1IV, TA1IV_TAIFG)) {
-	case TA1IV_TACCR1:								// прередача данных по UART на BT
+	case TA1IV_TACCR1:								// РїСЂРµСЂРµРґР°С‡Р° РґР°РЅРЅС‹С… РїРѕ UART РЅР° BT
 		if (tx_bitc1--) {
 			BIT_CLR(IE1, WDTIE);
 			BIT_CLR(TA1CCTL2, CCIE);
-			BIT_CLR(ADC10CTL0, ADC10IE);			// выключение прерываний
+			BIT_CLR(ADC10CTL0, ADC10IE);			// РІС‹РєР»СЋС‡РµРЅРёРµ РїСЂРµСЂС‹РІР°РЅРёР№
 			TA1CCR1 += BT_BITTIME;
 			if (tx_data_bt & 0x01)
 				BIT_CLR(TA1CCTL1, OUTMOD_6);
@@ -225,30 +225,30 @@ __interrupt void TIMER1_A1_isr(void) {
 			tx_bitc1 = 10;               			// reset bit counter
 			BIT_SET(IE1, WDTIE);
 			BIT_SET(TA1CCTL2, CCIE);
-			BIT_SET(ADC10CTL0, ADC10IE);			// включение прерываний
+			BIT_SET(ADC10CTL0, ADC10IE);			// РІРєР»СЋС‡РµРЅРёРµ РїСЂРµСЂС‹РІР°РЅРёР№
 		}
 		break;
-	case TA1IV_TACCR2:								// счетчик таймера режима низкого энергопотребления
+	case TA1IV_TACCR2:								// СЃС‡РµС‚С‡РёРє С‚Р°Р№РјРµСЂР° СЂРµР¶РёРјР° РЅРёР·РєРѕРіРѕ СЌРЅРµСЂРіРѕРїРѕС‚СЂРµР±Р»РµРЅРёСЏ
 		TA1_int = 1;
 		break;
 	}
 }
 
 #pragma vector = WDT_VECTOR
-__interrupt void WDT_isr(void) {					// прерывание WDT в режиме интервального таймера (проверка состояния)
+__interrupt void WDT_isr(void) {					// РїСЂРµСЂС‹РІР°РЅРёРµ WDT РІ СЂРµР¶РёРјРµ РёРЅС‚РµСЂРІР°Р»СЊРЅРѕРіРѕ С‚Р°Р№РјРµСЂР° (РїСЂРѕРІРµСЂРєР° СЃРѕСЃС‚РѕСЏРЅРёСЏ)
 	BIT_CLR(TA1CCTL2, CCIE);
-	BIT_CLR(ADC10CTL0, ADC10IE);					// выключение прерываний
+	BIT_CLR(ADC10CTL0, ADC10IE);					// РІС‹РєР»СЋС‡РµРЅРёРµ РїСЂРµСЂС‹РІР°РЅРёР№
 	if (e_save)
 	{
 		if (current_screen == 0){
-			dot_show++;								// покажем что часы работают
-			if (dot_show >1)						// моргаем точками
+			dot_show++;								// РїРѕРєР°Р¶РµРј С‡С‚Рѕ С‡Р°СЃС‹ СЂР°Р±РѕС‚Р°СЋС‚
+			if (dot_show >1)						// РјРѕСЂРіР°РµРј С‚РѕС‡РєР°РјРё
 				dot_show = 0;
 			lcd_dot(dot_show, 46, 2);
 		}
-		if (++count_sec2>19){						// ручной грубый подсчет времени
-			count_sec2 = 1;							// в режиме энергосбережения
-			if (m1<9)								// т.к. нет связи с ЧРВ
+		if (++count_sec2>19){						// СЂСѓС‡РЅРѕР№ РіСЂСѓР±С‹Р№ РїРѕРґСЃС‡РµС‚ РІСЂРµРјРµРЅРё
+			count_sec2 = 1;							// РІ СЂРµР¶РёРјРµ СЌРЅРµСЂРіРѕСЃР±РµСЂРµР¶РµРЅРёСЏ
+			if (m1<9)								// С‚.Рє. РЅРµС‚ СЃРІСЏР·Рё СЃ Р§Р Р’
 				m1++;
 			else
 				if (m10<5){
@@ -279,52 +279,52 @@ __interrupt void WDT_isr(void) {					// прерывание WDT в режиме интервального та
 			lcd_set_time_small();
 		}
 	}
-	check_akk = 1;									// проверка аккума
+	check_akk = 1;									// РїСЂРѕРІРµСЂРєР° Р°РєРєСѓРјР°
 	if (!edit_time){
 		get_time = 1;
-	}												// обновим время
+	}												// РѕР±РЅРѕРІРёРј РІСЂРµРјСЏ
 	if (bt_connect) {
-		check_bluetooth();							// проверка BT
-		if (bt_on == 0) {							// BT отключен
+		check_bluetooth();							// РїСЂРѕРІРµСЂРєР° BT
+		if (bt_on == 0) {							// BT РѕС‚РєР»СЋС‡РµРЅ
 			e_save = 0;
-			__bic_SR_register_on_exit(LPM3_bits);	// выход из реима LPM3
-			BIT_SET(TACCTL2, OUTMOD_6);				// включение подсветки
+			__bic_SR_register_on_exit(LPM3_bits);	// РІС‹С…РѕРґ РёР· СЂРµРёРјР° LPM3
+			BIT_SET(TACCTL2, OUTMOD_6);				// РІРєР»СЋС‡РµРЅРёРµ РїРѕРґСЃРІРµС‚РєРё
 		}
 	}
 	BIT_SET(TA1CCTL2, CCIE);
-	BIT_SET(ADC10CTL0, ADC10IE);					// включение прерываний
+	BIT_SET(ADC10CTL0, ADC10IE);					// РІРєР»СЋС‡РµРЅРёРµ РїСЂРµСЂС‹РІР°РЅРёР№
 }
 
 #pragma vector=PORT2_VECTOR
-__interrupt void P2_isr() // Обработчик прерывания
+__interrupt void P2_isr() // РћР±СЂР°Р±РѕС‚С‡РёРє РїСЂРµСЂС‹РІР°РЅРёСЏ
 {
-	if (P2IFG & BT_RXD) {					// по UART'у с BT идут данные в спящем режиме
+	if (P2IFG & BT_RXD) {					// РїРѕ UART'Сѓ СЃ BT РёРґСѓС‚ РґР°РЅРЅС‹Рµ РІ СЃРїСЏС‰РµРј СЂРµР¶РёРјРµ
 		get_time = 0;
 		set_time = 0;
 		check_akk = 0;
 		ADC_int = 0;
-		P2_int = 0;							// убираем все проверки и обработчики прерываний
+		P2_int = 0;							// СѓР±РёСЂР°РµРј РІСЃРµ РїСЂРѕРІРµСЂРєРё Рё РѕР±СЂР°Р±РѕС‚С‡РёРєРё РїСЂРµСЂС‹РІР°РЅРёР№
 		BIT_CLR(IE1, WDTIE);
 		BIT_CLR(TA1CCTL2, CCIE);
-		BIT_CLR(ADC10CTL0, ADC10IE);		// выключение прерываний
+		BIT_CLR(ADC10CTL0, ADC10IE);		// РІС‹РєР»СЋС‡РµРЅРёРµ РїСЂРµСЂС‹РІР°РЅРёР№
 		BIT_CLR(P2IE, BT_RXD);
 		BIT_CLR(P2IFG, BT_RXD);
-		BIT_SET(P2SEL, BT_RXD);				// настраиваем пин BT_RXD на вход таймера
+		BIT_SET(P2SEL, BT_RXD);				// РЅР°СЃС‚СЂР°РёРІР°РµРј РїРёРЅ BT_RXD РЅР° РІС…РѕРґ С‚Р°Р№РјРµСЂР°
 		TA1CCR0 = TA1R;
-	} else {								// прерывание от нажатия кнопок
+	} else {								// РїСЂРµСЂС‹РІР°РЅРёРµ РѕС‚ РЅР°Р¶Р°С‚РёСЏ РєРЅРѕРїРѕРє
 		BIT_CLR(P2IE, B_CENT|B_UP|B_DOWN);
 		BIT_CLR(IE1, WDTIE);
 		BIT_CLR(TA1CCTL2, CCIE);
-		BIT_CLR(ADC10CTL0, ADC10IE);		// выключение прерываний
+		BIT_CLR(ADC10CTL0, ADC10IE);		// РІС‹РєР»СЋС‡РµРЅРёРµ РїСЂРµСЂС‹РІР°РЅРёР№
 		BIT_CLR(P2IE, BT_RXD);
 		BIT_CLR(P2IFG, BT_RXD);
-		BIT_SET(P2SEL, BT_RXD);				// настраиваем пин BT_RXD на вход таймера
+		BIT_SET(P2SEL, BT_RXD);				// РЅР°СЃС‚СЂР°РёРІР°РµРј РїРёРЅ BT_RXD РЅР° РІС…РѕРґ С‚Р°Р№РјРµСЂР°
 		char long_press = 1;
 		unsigned long a;
-		BIT_SET(TACCTL2, OUTMOD_6);			// включение подсветки и диспеля
-		i_timer = 0;  						// обнуление счетчика
-		if (P2IFG & B_CENT) { 				// прерывание от B_CENT
-			for (a = 200000; a > 0; a--)	// антидребезг и проверка длинного нажатия
+		BIT_SET(TACCTL2, OUTMOD_6);			// РІРєР»СЋС‡РµРЅРёРµ РїРѕРґСЃРІРµС‚РєРё Рё РґРёСЃРїРµР»СЏ
+		i_timer = 0;  						// РѕР±РЅСѓР»РµРЅРёРµ СЃС‡РµС‚С‡РёРєР°
+		if (P2IFG & B_CENT) { 				// РїСЂРµСЂС‹РІР°РЅРёРµ РѕС‚ B_CENT
+			for (a = 200000; a > 0; a--)	// Р°РЅС‚РёРґСЂРµР±РµР·Рі Рё РїСЂРѕРІРµСЂРєР° РґР»РёРЅРЅРѕРіРѕ РЅР°Р¶Р°С‚РёСЏ
 				if (P2IN & B_CENT)
 					long_press = 0;
 			if (long_press)
@@ -332,8 +332,8 @@ __interrupt void P2_isr() // Обработчик прерывания
 			else
 				btn_pressed = 2;
 		}
-		if (P2IFG & B_DOWN) {  					// прерывание от B_DOWN
-			for (a = 200000; a > 0; a--)		// антидребезг и проверка длинного нажатия
+		if (P2IFG & B_DOWN) {  					// РїСЂРµСЂС‹РІР°РЅРёРµ РѕС‚ B_DOWN
+			for (a = 200000; a > 0; a--)		// Р°РЅС‚РёРґСЂРµР±РµР·Рі Рё РїСЂРѕРІРµСЂРєР° РґР»РёРЅРЅРѕРіРѕ РЅР°Р¶Р°С‚РёСЏ
 				if (P2IN & B_DOWN)
 					long_press = 0;
 			if (long_press)
@@ -341,8 +341,8 @@ __interrupt void P2_isr() // Обработчик прерывания
 			else
 				btn_pressed = 3;
 		}
-		if (P2IFG & B_UP) {  							// прерывание от B_UP
-			for (a = 200000; a > 0; a--)				// антидребезг и проверка длинного нажатия
+		if (P2IFG & B_UP) {  							// РїСЂРµСЂС‹РІР°РЅРёРµ РѕС‚ B_UP
+			for (a = 200000; a > 0; a--)				// Р°РЅС‚РёРґСЂРµР±РµР·Рі Рё РїСЂРѕРІРµСЂРєР° РґР»РёРЅРЅРѕРіРѕ РЅР°Р¶Р°С‚РёСЏ
 				if (P2IN & B_UP)
 					long_press = 0;
 			if (long_press)
@@ -358,23 +358,23 @@ __interrupt void P2_isr() // Обработчик прерывания
 		BIT_SET(ADC10CTL0, ADC10IE);
 	}
 	e_save = 0;
-	__bic_SR_register_on_exit(LPM3_bits);			// выход из LPM3
+	__bic_SR_register_on_exit(LPM3_bits);			// РІС‹С…РѕРґ РёР· LPM3
 
 }
 
-#pragma vector=ADC10_VECTOR							// прерывание готовности преобразования АЦП
+#pragma vector=ADC10_VECTOR							// РїСЂРµСЂС‹РІР°РЅРёРµ РіРѕС‚РѕРІРЅРѕСЃС‚Рё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ РђР¦Рџ
 __interrupt void ADC10_isr(void) {
 	ADC_int = 1;
 }
-// прерывания
+// РїСЂРµСЂС‹РІР°РЅРёСЏ
 
 void check_akkum(void) {
 	unsigned int adc;
 	adc = ADC10MEM;
-	if (v2_5) {						// отобразим состояние аккума на экране
+	if (v2_5) {						// РѕС‚РѕР±СЂР°Р·РёРј СЃРѕСЃС‚РѕСЏРЅРёРµ Р°РєРєСѓРјР° РЅР° СЌРєСЂР°РЅРµ
 		bat_sost = 4;
 	} else {
-		bat_sost = 4;			// константы вычисленные в результате наблюдений
+		bat_sost = 4;			// РєРѕРЅСЃС‚Р°РЅС‚С‹ РІС‹С‡РёСЃР»РµРЅРЅС‹Рµ РІ СЂРµР·СѓР»СЊС‚Р°С‚Рµ РЅР°Р±Р»СЋРґРµРЅРёР№
 		if (adc > 0x034e)
 			bat_sost = 3;
 		if (adc > 0x035a)
@@ -384,26 +384,26 @@ void check_akkum(void) {
 		if (adc > 0x0389)
 			bat_sost = 0;
 	}
-	if (adc >= 0x03ff) {			// при зарядке, напруга на аккуме через делитель больше 2,5 V
+	if (adc >= 0x03ff) {			// РїСЂРё Р·Р°СЂСЏРґРєРµ, РЅР°РїСЂСѓРіР° РЅР° Р°РєРєСѓРјРµ С‡РµСЂРµР· РґРµР»РёС‚РµР»СЊ Р±РѕР»СЊС€Рµ 2,5 V
 		v2_5 = 0;
 	}
-	if (adc < 0x030c) {				// при разряде, напруга на аккуме через делитель меньше 2,5 V
+	if (adc < 0x030c) {				// РїСЂРё СЂР°Р·СЂСЏРґРµ, РЅР°РїСЂСѓРіР° РЅР° Р°РєРєСѓРјРµ С‡РµСЂРµР· РґРµР»РёС‚РµР»СЊ РјРµРЅСЊС€Рµ 2,5 V
 		v2_5 = 1;
 	}
 	lcd_show_bat(bat_sost);
 }
 
-void check_bluetooth(void) {		// проверка коннекта BT
+void check_bluetooth(void) {		// РїСЂРѕРІРµСЂРєР° РєРѕРЅРЅРµРєС‚Р° BT
 	unsigned int i;
 	char disconnect = 0;
-	for (i = 65000; i > 0; i--)		// если BT соединен, то BT_LED лог. 1, иначе 10101010
-		if (!(P3IN & BT_LED)) {		// ловим лог. 0, если появился, значит BT отсоединен
+	for (i = 65000; i > 0; i--)		// РµСЃР»Рё BT СЃРѕРµРґРёРЅРµРЅ, С‚Рѕ BT_LED Р»РѕРі. 1, РёРЅР°С‡Рµ 10101010
+		if (!(P3IN & BT_LED)) {		// Р»РѕРІРёРј Р»РѕРі. 0, РµСЃР»Рё РїРѕСЏРІРёР»СЃСЏ, Р·РЅР°С‡РёС‚ BT РѕС‚СЃРѕРµРґРёРЅРµРЅ
 			disconnect = 1;
 		}
 	if (disconnect) {
 		i_timer = 0;
 		BIT_CLR(P2OUT, BT_PWR);
-		BIT_CLR(P3OUT, BT_PWR);		// выключаем питание BT
+		BIT_CLR(P3OUT, BT_PWR);		// РІС‹РєР»СЋС‡Р°РµРј РїРёС‚Р°РЅРёРµ BT
 		lcd_show_bt(0);
 		lcd_show_sms(0);
 		lcd_show_call(0);
@@ -414,7 +414,7 @@ void check_bluetooth(void) {		// проверка коннекта BT
 		Lcd_set_pos(0, 2);
 		LcdString("BLUETOOTH      ");
 		Lcd_set_pos(0, 3);
-		LcdString("    отсоеденен!");
+		LcdString("    РѕС‚СЃРѕРµРґРµРЅРµРЅ!");
 		BIT_SET(P3OUT, vibro);
 		__delay_cycles(800000);
 		BIT_CLR(P3OUT, vibro);
@@ -429,13 +429,13 @@ void check_bluetooth(void) {		// проверка коннекта BT
 		__delay_cycles(800000);
 		BIT_SET(P3OUT, vibro);
 		__delay_cycles(800000);
-		BIT_CLR(P3OUT, vibro);			// сигнализируем об отключенном BT
+		BIT_CLR(P3OUT, vibro);			// СЃРёРіРЅР°Р»РёР·РёСЂСѓРµРј РѕР± РѕС‚РєР»СЋС‡РµРЅРЅРѕРј BT
 		BIT_SET(IE1, WDTIE);
 		BIT_SET(TA1CCTL2, CCIE);
-		BIT_SET(ADC10CTL0, ADC10IE);	// включение прерываний
+		BIT_SET(ADC10CTL0, ADC10IE);	// РІРєР»СЋС‡РµРЅРёРµ РїСЂРµСЂС‹РІР°РЅРёР№
 		BIT_CLR(P2IE, BT_RXD);
 		BIT_CLR(P2IFG, BT_RXD);
-		BIT_SET(P2SEL, BT_RXD);			// BT_RXD как вход для таймера
+		BIT_SET(P2SEL, BT_RXD);			// BT_RXD РєР°Рє РІС…РѕРґ РґР»СЏ С‚Р°Р№РјРµСЂР°
 	}
 }
 
@@ -449,22 +449,22 @@ void main(void) {
 			string_ready=0;
 			parse_string();
 		}
-		if (P2_int){		// прерывание от P2
+		if (P2_int){		// РїСЂРµСЂС‹РІР°РЅРёРµ РѕС‚ P2
 			P2_int = 0;
 			switch (btn_pressed) {
 			case 0:
 				break;
 			case 1:		// up
-				if (current_screen == 2) { 			// выбор строки  в меню
+				if (current_screen == 2) { 			// РІС‹Р±РѕСЂ СЃС‚СЂРѕРєРё  РІ РјРµРЅСЋ
 					current_menu_item--;
 					if (current_menu_item <= 0)
 						current_menu_item = max_menu_item;
 					menu_setting(0);
-				} else if (current_screen == 3)   			// изменение в подменю
+				} else if (current_screen == 3)   			// РёР·РјРµРЅРµРЅРёРµ РІ РїРѕРґРјРµРЅСЋ
 					up_sub_menu();
-				else if (current_screen == 4) {				// многоэкранное сообщение, показать предыдущий экран
+				else if (current_screen == 4) {				// РјРЅРѕРіРѕСЌРєСЂР°РЅРЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ, РїРѕРєР°Р·Р°С‚СЊ РїСЂРµРґС‹РґСѓС‰РёР№ СЌРєСЂР°РЅ
 					unsigned int l, k = 15, z = 1;
-					if (text_screen - 1 > 0) {				// не первый экран
+					if (text_screen - 1 > 0) {				// РЅРµ РїРµСЂРІС‹Р№ СЌРєСЂР°РЅ
 						clear_1();
 						Lcd_set_pos(0, 1);
 						text_screen--;
@@ -479,7 +479,7 @@ void main(void) {
 						Lcd_set_pos(13, 7);
 						LcdCharacter(0x7e);
 						LcdCharacter(0x7f);
-					} else if (text_screen - 1 == 0) {		// первый экран
+					} else if (text_screen - 1 == 0) {		// РїРµСЂРІС‹Р№ СЌРєСЂР°РЅ
 						clear_1();
 						Lcd_set_pos(0, 1);
 						text_screen--;
@@ -497,25 +497,25 @@ void main(void) {
 				}
 				break;
 			case 2:		// cent
-				if (current_screen == 2) {		// меню -> подменю
+				if (current_screen == 2) {		// РјРµРЅСЋ -> РїРѕРґРјРµРЅСЋ
 					current_sub_menu_item = 0;
 					menu_setting(current_menu_item);
-				} else if (current_screen == 3) {	// подменю -> след. элемент
+				} else if (current_screen == 3) {	// РїРѕРґРјРµРЅСЋ -> СЃР»РµРґ. СЌР»РµРјРµРЅС‚
 					current_sub_menu_item++;
 					menu_setting(current_menu_item);
 				}
 				break;
 			case 3:		// down
-				if (current_screen == 2) { 	// перемешение по меню
+				if (current_screen == 2) { 	// РїРµСЂРµРјРµС€РµРЅРёРµ РїРѕ РјРµРЅСЋ
 					current_menu_item++;
 					if (current_menu_item > max_menu_item)
 						current_menu_item = 1;
 					menu_setting(0);
-				} else if (current_screen == 3)   	// изменение в подменю
+				} else if (current_screen == 3)   	// РёР·РјРµРЅРµРЅРёРµ РІ РїРѕРґРјРµРЅСЋ
 					down_sub_menu();
-				else if (current_screen == 4) {		// многоэкранное сообщение, показать следующий экран
+				else if (current_screen == 4) {		// РјРЅРѕРіРѕСЌРєСЂР°РЅРЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ, РїРѕРєР°Р·Р°С‚СЊ СЃР»РµРґСѓСЋС‰РёР№ СЌРєСЂР°РЅ
 					unsigned int l, k , z = 1, m = 15;
-					if ((text_screen + 1) < screens) {			// не последний экран
+					if ((text_screen + 1) < screens) {			// РЅРµ РїРѕСЃР»РµРґРЅРёР№ СЌРєСЂР°РЅ
 						clear_1();
 						Lcd_set_pos(0, 1);
 						text_screen++;
@@ -530,7 +530,7 @@ void main(void) {
 						Lcd_set_pos(13, 7);
 						LcdCharacter(0x7e);
 						LcdCharacter(0x7f);
-					} else if ((text_screen + 1) == screens) {	// последний экран
+					} else if ((text_screen + 1) == screens) {	// РїРѕСЃР»РµРґРЅРёР№ СЌРєСЂР°РЅ
 						clear_1();
 						Lcd_set_pos(0, 1);
 						text_screen++;
@@ -555,9 +555,9 @@ void main(void) {
 				if (call_true == 1){
 					uart_tx_bt('2');
 				}
-				if (current_screen == 0)				// начальный экран -> меню
+				if (current_screen == 0)				// РЅР°С‡Р°Р»СЊРЅС‹Р№ СЌРєСЂР°РЅ -> РјРµРЅСЋ
 					menu_setting(0);
-				else {									// любой экран -> начальный экран
+				else {									// Р»СЋР±РѕР№ СЌРєСЂР°РЅ -> РЅР°С‡Р°Р»СЊРЅС‹Р№ СЌРєСЂР°РЅ
 					multiscreen = 0;
 					unsigned int il;
 					for (il = 313; il > 0; il--)
@@ -571,25 +571,25 @@ void main(void) {
 				if (call_true == 1){
 					uart_tx_bt('2');
 				}
-				if (current_screen == 0)		// начальный экран -> меню
+				if (current_screen == 0)		// РЅР°С‡Р°Р»СЊРЅС‹Р№ СЌРєСЂР°РЅ -> РјРµРЅСЋ
 					menu_setting(0);
-				else {							// любой экран -> начальный экран
+				else {							// Р»СЋР±РѕР№ СЌРєСЂР°РЅ -> РЅР°С‡Р°Р»СЊРЅС‹Р№ СЌРєСЂР°РЅ
 					multiscreen = 0;
 					unsigned int il;
 					for (il = 313; il > 0; il--)
 						inputString[il] = 0;
 					lcd_show_main();
 					edit_time = 0;
-					get_time = 1;				// обновим время
+					get_time = 1;				// РѕР±РЅРѕРІРёРј РІСЂРµРјСЏ
 				}
 				break;
 			case 6:		// long down
 				if (call_true == 1){
 					uart_tx_bt('2');
 				}
-				if (current_screen == 0)		// начальный экран -> меню
+				if (current_screen == 0)		// РЅР°С‡Р°Р»СЊРЅС‹Р№ СЌРєСЂР°РЅ -> РјРµРЅСЋ
 					menu_setting(0);
-				else {							// любой экран -> начальный экран
+				else {							// Р»СЋР±РѕР№ СЌРєСЂР°РЅ -> РЅР°С‡Р°Р»СЊРЅС‹Р№ СЌРєСЂР°РЅ
 					multiscreen = 0;
 					unsigned int il;
 					for (il = 313; il > 0; il--)
@@ -601,7 +601,7 @@ void main(void) {
 				break;
 			}
 		}
-		if (TA1_int){		// прерывание от TA1
+		if (TA1_int){		// РїСЂРµСЂС‹РІР°РЅРёРµ РѕС‚ TA1
 			TA1_int = 0;
 			if (!e_save){
 				if (++count_sec == 15){
@@ -613,14 +613,14 @@ void main(void) {
 					}
 					count_sec = 1;
 				}
-				if (++i_timer == timer_off) {				// время до выключения экрана
+				if (++i_timer == timer_off) {				// РІСЂРµРјСЏ РґРѕ РІС‹РєР»СЋС‡РµРЅРёСЏ СЌРєСЂР°РЅР°
 					if ((bt_on == 1) && (bt_connect == 0)) {
 						i_timer = 0;
 					} else {
 						BIT_CLR(ADC10CTL0, ADC10IE);
 						i_timer = -1;
-						BIT_CLR(TACCTL2, OUTMOD_6);			// отключаем подсветку
-						BIT_CLR(TACCTL2, OUT);				// отключаем подсветку
+						BIT_CLR(TACCTL2, OUTMOD_6);			// РѕС‚РєР»СЋС‡Р°РµРј РїРѕРґСЃРІРµС‚РєСѓ
+						BIT_CLR(TACCTL2, OUT);				// РѕС‚РєР»СЋС‡Р°РµРј РїРѕРґСЃРІРµС‚РєСѓ
 						count_sec2 = s10*10+s1;
 						if (count_sec2>45)
 							count_sec2 = 17;
@@ -635,34 +635,34 @@ void main(void) {
 						BIT_CLR(P2SEL, BT_RXD);
 						BIT_SET(P2IES, BT_RXD);
 						BIT_CLR(P2IFG, BT_RXD);
-						BIT_SET(P2IE, BT_RXD);				// настраиваем пин BT_RXD на прерывание (в режиме LPM3 SMCLK отключен, таймер не работает)
+						BIT_SET(P2IE, BT_RXD);				// РЅР°СЃС‚СЂР°РёРІР°РµРј РїРёРЅ BT_RXD РЅР° РїСЂРµСЂС‹РІР°РЅРёРµ (РІ СЂРµР¶РёРјРµ LPM3 SMCLK РѕС‚РєР»СЋС‡РµРЅ, С‚Р°Р№РјРµСЂ РЅРµ СЂР°Р±РѕС‚Р°РµС‚)
 						e_save = 1;
 						LPM3;
 					}
 				}
 			}
 		}
-		if (ADC_int){		// прерывание от ADC
+		if (ADC_int){		// РїСЂРµСЂС‹РІР°РЅРёРµ РѕС‚ ADC
 			ADC_int = 0;
-			BIT_CLR(IE1, WDTIE);							// выключение прерываний
+			BIT_CLR(IE1, WDTIE);							// РІС‹РєР»СЋС‡РµРЅРёРµ РїСЂРµСЂС‹РІР°РЅРёР№
 			BIT_CLR(TA1CCTL2, CCIE);
-			check_akkum();									// соотносим показания АЦП с таблицей заряда аккума
+			check_akkum();									// СЃРѕРѕС‚РЅРѕСЃРёРј РїРѕРєР°Р·Р°РЅРёСЏ РђР¦Рџ СЃ С‚Р°Р±Р»РёС†РµР№ Р·Р°СЂСЏРґР° Р°РєРєСѓРјР°
 			BIT_SET(IE1, WDTIE);
-			BIT_SET(TA1CCTL2, CCIE);						// включение прерываний
+			BIT_SET(TA1CCTL2, CCIE);						// РІРєР»СЋС‡РµРЅРёРµ РїСЂРµСЂС‹РІР°РЅРёР№
 		}
-		if (set_time) {		// записать время в ЧРВ
+		if (set_time) {		// Р·Р°РїРёСЃР°С‚СЊ РІСЂРµРјСЏ РІ Р§Р Р’
 			set_time_to_rtc();
 			__delay_cycles(2000000);
 			get_time = 1;
 			edit_time = 0;
 			set_time = 0;
 		}
-		if (get_time) {		// считать время из ЧРВ
+		if (get_time) {		// СЃС‡РёС‚Р°С‚СЊ РІСЂРµРјСЏ РёР· Р§Р Р’
 			get_time_from_rtc();
 			edit_time = 0;
 			get_time = 0;
 		}
-		if (check_akk) {	// проверить сост. аккума
+		if (check_akk) {	// РїСЂРѕРІРµСЂРёС‚СЊ СЃРѕСЃС‚. Р°РєРєСѓРјР°
 			if (!v2_5) {
 				ADC10CTL0 = 0;
 				ADC10CTL0 = SREF_0 + ADC10SR + ADC10SHT_2 + ADC10ON + ADC10IE + ENC + ADC10SC; // Vref = Vcc
@@ -673,7 +673,7 @@ void main(void) {
 			}
 			check_akk = 0;
 		}
-		if (time_from_phone) {// запросить время с телефона
+		if (time_from_phone) {// Р·Р°РїСЂРѕСЃРёС‚СЊ РІСЂРµРјСЏ СЃ С‚РµР»РµС„РѕРЅР°
 			uart_tx_bt('1');
 			time_from_phone = 0;
 		}
@@ -692,20 +692,20 @@ void init_watch(void){
 
 	__delay_cycles(800000);
 
-	// сажаем BSL ноги на выход и лог. 0
+	// СЃР°Р¶Р°РµРј BSL РЅРѕРіРё РЅР° РІС‹С…РѕРґ Рё Р»РѕРі. 0
 	BIT_SET(P1DIR, TXD | RXD);
 	BIT_CLR(P1OUT, TXD | RXD);
 
 	// init LCD
 	edit_time = 0;
-	// берем инфу о настройках экрана из FLASH'а
+	// Р±РµСЂРµРј РёРЅС„Сѓ Рѕ РЅР°СЃС‚СЂРѕР№РєР°С… СЌРєСЂР°РЅР° РёР· FLASH'Р°
 	char *a;
 	a = (char*) 0x104d;
 	contrast = *a++;
 	pwm_width = 0x00ff | (*a++) << 8;
 	timer_off = ((*a++) & 0x00ff) << 8;
 	timer_off |= ((*a++) & 0x00ff);
-	// настройка портов для LCD
+	// РЅР°СЃС‚СЂРѕР№РєР° РїРѕСЂС‚РѕРІ РґР»СЏ LCD
 	BIT_SET(P1DIR, PIN_RESET + PIN_SCE + PIN_SDIN);
 	BIT_SET(P3DIR, PIN_SCLK);
 	BIT_CLR(P1OUT, PIN_RESET + PIN_SDIN);
@@ -714,27 +714,27 @@ void init_watch(void){
 	BIT_SET(P3DIR, PIN_LED);
 	BIT_SET(P3OUT, PIN_LED);
 	BIT_SET(P1OUT, PIN_RESET);
-	// последовательность инициализации
-	LcdWrite(LCD_C, 0xE2); 								// сброс програмный
+	// РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё
+	LcdWrite(LCD_C, 0xE2); 								// СЃР±СЂРѕСЃ РїСЂРѕРіСЂР°РјРЅС‹Р№
 	LcdWrite(LCD_C, 0x3D); 								// Charge pump ON
 	LcdWrite(LCD_C, 0x01); 								// Charge pump=4
 	LcdWrite(LCD_C, 0xA4); 								//
 	LcdWrite(LCD_C, 0x2F); 								//
-	//LcdWrite(LCD_C, 0xC8);							// зеркально верх-низ
-	LcdWrite(LCD_C, 0xC0); 								// нормальное верх-низ
-	//LcdWrite(LCD_C, 0xA1);							// зеркально лево-право
-	LcdWrite(LCD_C, 0xA0); 								// нормальное лево-право
+	//LcdWrite(LCD_C, 0xC8);							// Р·РµСЂРєР°Р»СЊРЅРѕ РІРµСЂС…-РЅРёР·
+	LcdWrite(LCD_C, 0xC0); 								// РЅРѕСЂРјР°Р»СЊРЅРѕРµ РІРµСЂС…-РЅРёР·
+	//LcdWrite(LCD_C, 0xA1);							// Р·РµСЂРєР°Р»СЊРЅРѕ Р»РµРІРѕ-РїСЂР°РІРѕ
+	LcdWrite(LCD_C, 0xA0); 								// РЅРѕСЂРјР°Р»СЊРЅРѕРµ Р»РµРІРѕ-РїСЂР°РІРѕ
 	__delay_cycles(800000);
 	LcdWrite(LCD_C, 0xAF); 								// Display ON
 	LcdClear();
 	lcd_contrast(contrast);
 	BIT_SET(P3SEL, PIN_LED);
 	BIT_SET(P3DIR, PIN_LED);
-	// таймер ШИМ для подсветки
-	TACTL = TASSEL_2 + ID_0 + MC_1 + TACLR;		// SMCLK +  divider /1 + прямой счет до TACCR0 + counter clear
-	TACCR0 = 0x0fff;									// Период ШИМ
-	TACCR2 = pwm_width;									// заполнение ШИМ для подсветки
-	TACCTL2 = OUTMOD_6;							// Выход ШИМ
+	// С‚Р°Р№РјРµСЂ РЁРРњ РґР»СЏ РїРѕРґСЃРІРµС‚РєРё
+	TACTL = TASSEL_2 + ID_0 + MC_1 + TACLR;		// SMCLK +  divider /1 + РїСЂСЏРјРѕР№ СЃС‡РµС‚ РґРѕ TACCR0 + counter clear
+	TACCR0 = 0x0fff;									// РџРµСЂРёРѕРґ РЁРРњ
+	TACCR2 = pwm_width;									// Р·Р°РїРѕР»РЅРµРЅРёРµ РЁРРњ РґР»СЏ РїРѕРґСЃРІРµС‚РєРё
+	TACCTL2 = OUTMOD_6;							// Р’С‹С…РѕРґ РЁРРњ
 
 	// init Bluetooth
 	BIT_SET(P3DIR, BT_PWR);
@@ -742,63 +742,63 @@ void init_watch(void){
 	BIT_SET(P3OUT, BT_PWR);
 	BIT_SET(P2DIR, BT_PWR);
 	BIT_CLR(P2REN, BT_PWR);
-	BIT_SET(P2OUT, BT_PWR);	//питание БТ ON
-	BIT_CLR(P3DIR, BT_LED);	//состояние бт
+	BIT_SET(P2OUT, BT_PWR);	//РїРёС‚Р°РЅРёРµ Р‘Рў ON
+	BIT_CLR(P3DIR, BT_LED);	//СЃРѕСЃС‚РѕСЏРЅРёРµ Р±С‚
 	bt_on = 1;
 	lcd_show_bt(1);
-	//TimerA_1 для uart
+	//TimerA_1 РґР»СЏ uart
 	TA1CTL = TASSEL_2 + ID_3 + MC_2 + TAIE;	//TASSEL_2=SMCLK + input divider: 3 - /8 + mode control: 2 - Continous up + interrupt enable
 	TA1CCTL1 = OUT; //Tx
 	TA1CCTL0 = CM_2 + SCS + CAP + CCIE; //Rx
-	//Порты Rx и TX для БТ
+	//РџРѕСЂС‚С‹ Rx Рё TX РґР»СЏ Р‘Рў
 	BIT_SET(P2SEL, BT_TXD + BT_RXD);
 	BIT_SET(P2DIR, BT_TXD);
 
-	//таймер для выкл. экрана
+	//С‚Р°Р№РјРµСЂ РґР»СЏ РІС‹РєР». СЌРєСЂР°РЅР°
 	BIT_SET(TA1CCTL2, CCIE);
 
-	// Настройка кнопок
+	// РќР°СЃС‚СЂРѕР№РєР° РєРЅРѕРїРѕРє
 	BIT_CLR(P2DIR, B_CENT|B_UP|B_DOWN);
-	// направление пинов - IN
+	// РЅР°РїСЂР°РІР»РµРЅРёРµ РїРёРЅРѕРІ - IN
 	BIT_SET(P2REN, B_CENT|B_UP|B_DOWN);
-	// подключение резисторов
+	// РїРѕРґРєР»СЋС‡РµРЅРёРµ СЂРµР·РёСЃС‚РѕСЂРѕРІ
 	BIT_SET(P2IE, B_CENT|B_UP|B_DOWN);
-	// Разрешение прерываний
+	// Р Р°Р·СЂРµС€РµРЅРёРµ РїСЂРµСЂС‹РІР°РЅРёР№
 	BIT_SET(P2IES, B_CENT|B_UP|B_DOWN);
-	// Прерывание происходит по 1/0 (отпусканию/нажатию)
+	// РџСЂРµСЂС‹РІР°РЅРёРµ РїСЂРѕРёСЃС…РѕРґРёС‚ РїРѕ 1/0 (РѕС‚РїСѓСЃРєР°РЅРёСЋ/РЅР°Р¶Р°С‚РёСЋ)
 	BIT_CLR(P2IFG, B_CENT|B_UP|B_DOWN);
-	// Очистка флага прерываний
+	// РћС‡РёСЃС‚РєР° С„Р»Р°РіР° РїСЂРµСЂС‹РІР°РЅРёР№
 
-	// WDT+ как интервальный таймер, частота 12 КГц - ACLK - VLO
+	// WDT+ РєР°Рє РёРЅС‚РµСЂРІР°Р»СЊРЅС‹Р№ С‚Р°Р№РјРµСЂ, С‡Р°СЃС‚РѕС‚Р° 12 РљР“С† - ACLK - VLO
 	WDTCTL = WDTPW + WDTTMSEL + WDTSSEL;
 	BIT_SET(IE1, WDTIE);
 
-	// vibro - выход
+	// vibro - РІС‹С…РѕРґ
 	BIT_SET(P3DIR, vibro);
 	BIT_CLR(P3OUT, vibro);
 
-	lcd_show_main();		// главный экран
+	lcd_show_main();		// РіР»Р°РІРЅС‹Р№ СЌРєСЂР°РЅ
 	__enable_interrupt();
 	edit_time = 0;
 	get_time = 0;
 	set_time = 0;
-	get_time_from_rtc();	// обновляем время
+	get_time_from_rtc();	// РѕР±РЅРѕРІР»СЏРµРј РІСЂРµРјСЏ
 	__delay_cycles(8000000);
-	set_time_to_rtc();		// обновляем время
+	set_time_to_rtc();		// РѕР±РЅРѕРІР»СЏРµРј РІСЂРµРјСЏ
 
 	// init ADC
-	ADC10CTL0 = SREF_1 + ADC10SR + REF2_5V + ADC10SHT_2 + REFON + ADC10ON + ADC10IE;// включаем АЦП+ REFON
+	ADC10CTL0 = SREF_1 + ADC10SR + REF2_5V + ADC10SHT_2 + REFON + ADC10ON + ADC10IE;// РІРєР»СЋС‡Р°РµРј РђР¦Рџ+ REFON
 	ADC10CTL1 = INCH_0; //A0
-	ADC10AE0 |= 0x01; // устанавливаем 0-ой пин как вход для АЦП
+	ADC10AE0 |= 0x01; // СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј 0-РѕР№ РїРёРЅ РєР°Рє РІС…РѕРґ РґР»СЏ РђР¦Рџ
 }
 
 
-void parse_string(void) {					// разбор пришедшего сообщения
+void parse_string(void) {					// СЂР°Р·Р±РѕСЂ РїСЂРёС€РµРґС€РµРіРѕ СЃРѕРѕР±С‰РµРЅРёСЏ
 	unsigned int il;
 	unsigned char z,k;
 
 	switch (inputString[0]) {
-		case '1': {						// индикация успешно подключившегося к BT телефона
+		case '1': {						// РёРЅРґРёРєР°С†РёСЏ СѓСЃРїРµС€РЅРѕ РїРѕРґРєР»СЋС‡РёРІС€РµРіРѕСЃСЏ Рє BT С‚РµР»РµС„РѕРЅР°
 			BIT_SET(P3OUT, vibro);
 			__delay_cycles(1600000);
 			BIT_CLR(P3OUT, vibro);
@@ -814,7 +814,7 @@ void parse_string(void) {					// разбор пришедшего сообщения
 			bt_connect = 1;
 			break;
 		}
-		case '2': {						// индикация входящего смс
+		case '2': {						// РёРЅРґРёРєР°С†РёСЏ РІС…РѕРґСЏС‰РµРіРѕ СЃРјСЃ
 			current_screen = 1;
 			lcd_show_sms(1);
 			lcd_show_call(0);
@@ -850,7 +850,7 @@ void parse_string(void) {					// разбор пришедшего сообщения
 			BIT_CLR(P3OUT, vibro);
 			break;
 		}
-		case '3': {					// индикация входящего звонка
+		case '3': {					// РёРЅРґРёРєР°С†РёСЏ РІС…РѕРґСЏС‰РµРіРѕ Р·РІРѕРЅРєР°
 			current_screen = 1;
 			lcd_show_sms(0);
 			lcd_show_call(1);
@@ -884,7 +884,7 @@ void parse_string(void) {					// разбор пришедшего сообщения
 			BIT_CLR(P3OUT, vibro);
 			break;
 		}
-		case '4': {					// отображение присланного текста
+		case '4': {					// РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ РїСЂРёСЃР»Р°РЅРЅРѕРіРѕ С‚РµРєСЃС‚Р°
 			current_screen = 1;
 			lcd_show_sms(0);
 			lcd_show_call(0);
@@ -913,7 +913,7 @@ void parse_string(void) {					// разбор пришедшего сообщения
 				}
 			break;
 		}
-		case '5': {				  // сохранение присланного времени
+		case '5': {				  // СЃРѕС…СЂР°РЅРµРЅРёРµ РїСЂРёСЃР»Р°РЅРЅРѕРіРѕ РІСЂРµРјРµРЅРё
 			edit_time = 1;
 			s10 = inputString[1] & 0x0f;
 			s1 = inputString[2] & 0x0f;
@@ -934,13 +934,13 @@ void parse_string(void) {					// разбор пришедшего сообщения
 		case '6':			// reinit LCD
 		{
 			LcdWrite(LCD_C, 0xAE); 								// Display ON
-			LcdWrite(LCD_C, 0xE2); 								// сброс програмный
+			LcdWrite(LCD_C, 0xE2); 								// СЃР±СЂРѕСЃ РїСЂРѕРіСЂР°РјРЅС‹Р№
 			LcdWrite(LCD_C, 0x3D); 								// Charge pump ON
 			LcdWrite(LCD_C, 0x01); 								// Charge pump=4
 			LcdWrite(LCD_C, 0xA4); 								//
 			LcdWrite(LCD_C, 0x2F); 								//
-			LcdWrite(LCD_C, 0xC0); 								// нормальное верх-низ
-			LcdWrite(LCD_C, 0xA0); 								// нормальное лево-право
+			LcdWrite(LCD_C, 0xC0); 								// РЅРѕСЂРјР°Р»СЊРЅРѕРµ РІРµСЂС…-РЅРёР·
+			LcdWrite(LCD_C, 0xA0); 								// РЅРѕСЂРјР°Р»СЊРЅРѕРµ Р»РµРІРѕ-РїСЂР°РІРѕ
 			__delay_cycles(800000);
 			LcdWrite(LCD_C, 0xAF); 								// Display ON
 			lcd_contrast(contrast);
@@ -957,14 +957,14 @@ void parse_string(void) {					// разбор пришедшего сообщения
 }
 
 //
-//работа с uart для bt
+//СЂР°Р±РѕС‚Р° СЃ uart РґР»СЏ bt
 //
-void uart_puts_bt(char const* s) { 		// отправить строку
+void uart_puts_bt(char const* s) { 		// РѕС‚РїСЂР°РІРёС‚СЊ СЃС‚СЂРѕРєСѓ
 	while (*s)
 		uart_tx_bt(*s++);
 }
 
-void uart_tx_bt(char c) {				// отправить символ
+void uart_tx_bt(char c) {				// РѕС‚РїСЂР°РІРёС‚СЊ СЃРёРјРІРѕР»
 	while (TA1CCTL1 & CCIE)
 		;
 	tx_data_bt = (c | 0xFF00);
@@ -974,46 +974,46 @@ void uart_tx_bt(char c) {				// отправить символ
 	__enable_interrupt();
 }
 //
-//работа с uart для bt
+//СЂР°Р±РѕС‚Р° СЃ uart РґР»СЏ bt
 //
 
 //
-//работа с экраном
+//СЂР°Р±РѕС‚Р° СЃ СЌРєСЂР°РЅРѕРј
 //
-void LcdCharacter(char character) {							// отображение символа
+void LcdCharacter(char character) {							// РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ СЃРёРјРІРѕР»Р°
 	unsigned char tmp = 0x20;
 	unsigned char index;
 
-	if ((character & 0xff) >= 0xc0) {						// если кирилица
+	if ((character & 0xff) >= 0xc0) {						// РµСЃР»Рё РєРёСЂРёР»РёС†Р°
 		tmp = 0x60;
 	}
-	if ((character & 0xff) == 0xb8) {						// если ё
+	if ((character & 0xff) == 0xb8) {						// РµСЃР»Рё С‘
 		character = 0xe5;
 		tmp = 0x60;
 	}
-	if ((character & 0xff) == 0xa8) {						// если Ё
+	if ((character & 0xff) == 0xa8) {						// РµСЃР»Рё РЃ
 		character = 0xc5;
 		tmp = 0x60;
 	}
-	if (black_text) {										// текст на черном фоне
+	if (black_text) {										// С‚РµРєСЃС‚ РЅР° С‡РµСЂРЅРѕРј С„РѕРЅРµ
 		LcdWrite(LCD_D, 0xff);
 		for (index = 5; index > 0; index--)
-			LcdWrite(LCD_D, ~ASCII[(character & 0xff) - tmp][5 - index]);	// попиксельно рисуем символы
+			LcdWrite(LCD_D, ~ASCII[(character & 0xff) - tmp][5 - index]);	// РїРѕРїРёРєСЃРµР»СЊРЅРѕ СЂРёСЃСѓРµРј СЃРёРјРІРѕР»С‹
 	} else {
 		LcdWrite(LCD_D, 0x00);
 		for (index = 5; index > 0; index--)
-			LcdWrite(LCD_D, ASCII[(character & 0xff) - tmp][5 - index]);	// попиксельно рисуем символы
+			LcdWrite(LCD_D, ASCII[(character & 0xff) - tmp][5 - index]);	// РїРѕРїРёРєСЃРµР»СЊРЅРѕ СЂРёСЃСѓРµРј СЃРёРјРІРѕР»С‹
 	}
 }
 
-void LcdClear(void) {									// очистка экрана
+void LcdClear(void) {									// РѕС‡РёСЃС‚РєР° СЌРєСЂР°РЅР°
 	unsigned int index = 0;
 
 	for (index = 864; index > 0; index--)
 		LcdWrite(LCD_D, 0x00);
 }
 
-void clear_1() {								// очистка рабочего поля экрана
+void clear_1() {								// РѕС‡РёСЃС‚РєР° СЂР°Р±РѕС‡РµРіРѕ РїРѕР»СЏ СЌРєСЂР°РЅР°
 	unsigned int index = 0;
 
 	Lcd_set_pos(0, 1);
@@ -1021,23 +1021,23 @@ void clear_1() {								// очистка рабочего поля экрана
 		LcdWrite(LCD_D, 0x00);
 }
 
-void Lcd_set_pos(unsigned char c, unsigned char r) {// Установить позицию на экране c x r в символах
+void Lcd_set_pos(unsigned char c, unsigned char r) {// РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РїРѕР·РёС†РёСЋ РЅР° СЌРєСЂР°РЅРµ c x r РІ СЃРёРјРІРѕР»Р°С…
 	c = c * 6;
 	Lcd_set_pos_pix(c, r);
 }
 
-void Lcd_set_pos_pix(unsigned char c, unsigned char r) {// Установить позицию на экране c x r в пикселях
+void Lcd_set_pos_pix(unsigned char c, unsigned char r) {// РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РїРѕР·РёС†РёСЋ РЅР° СЌРєСЂР°РЅРµ c x r РІ РїРёРєСЃРµР»СЏС…
 	LcdWrite(LCD_C, 0xB0 | (r & 0x0F));					// Page address set
 	LcdWrite(LCD_C, 0x10 | ((c >> 4) & 0x07));			// Column address set Upper bit address
 	LcdWrite(LCD_C, 0x00 | (c & 0x0F));					// Column address set Lower bit address
 }
 
-void lcd_contrast(unsigned char contrast2) {			// установка контраста
+void lcd_contrast(unsigned char contrast2) {			// СѓСЃС‚Р°РЅРѕРІРєР° РєРѕРЅС‚СЂР°СЃС‚Р°
 	contrast2 = contrast2 & 0x1F;
-	LcdWrite(LCD_C, 0x80 + contrast2); 					// контрастность (0-31)
+	LcdWrite(LCD_C, 0x80 + contrast2); 					// РєРѕРЅС‚СЂР°СЃС‚РЅРѕСЃС‚СЊ (0-31)
 }
 
-void lcd_dig(unsigned char num, unsigned char pos_x, unsigned char pos_y) { // большие цифры для часов
+void lcd_dig(unsigned char num, unsigned char pos_x, unsigned char pos_y) { // Р±РѕР»СЊС€РёРµ С†РёС„СЂС‹ РґР»СЏ С‡Р°СЃРѕРІ
 	unsigned char l = 0;
 	unsigned char z;
 	unsigned char k;
@@ -1054,7 +1054,7 @@ void lcd_dig(unsigned char num, unsigned char pos_x, unsigned char pos_y) { // б
 		l += 8;
 	}
 }
-void lcd_dig_clr(unsigned char num, unsigned char pos_x, unsigned char pos_y) { 	// двоеточие для часов
+void lcd_dig_clr(unsigned char num, unsigned char pos_x, unsigned char pos_y) { 	// РґРІРѕРµС‚РѕС‡РёРµ РґР»СЏ С‡Р°СЃРѕРІ
 	unsigned char l = 0;
 	unsigned char z;
 	unsigned char index;
@@ -1068,7 +1068,7 @@ void lcd_dig_clr(unsigned char num, unsigned char pos_x, unsigned char pos_y) { 
 	}
 }
 
-void lcd_dot(unsigned char num, unsigned char pos_x, unsigned char pos_y) { 	// двоеточие для часов
+void lcd_dot(unsigned char num, unsigned char pos_x, unsigned char pos_y) { 	// РґРІРѕРµС‚РѕС‡РёРµ РґР»СЏ С‡Р°СЃРѕРІ
 	unsigned char l = 0;
 	unsigned char z;
 	unsigned char index;
@@ -1082,7 +1082,7 @@ void lcd_dot(unsigned char num, unsigned char pos_x, unsigned char pos_y) { 	// 
 	}
 }
 
-void LcdWrite(unsigned char dc, unsigned char data) { // программная реализация spi
+void LcdWrite(unsigned char dc, unsigned char data) { // РїСЂРѕРіСЂР°РјРјРЅР°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ spi
 	if (dc == 1)
 		BIT_SET(P1OUT, PIN_SDIN);
 	else
@@ -1102,12 +1102,12 @@ void LcdWrite(unsigned char dc, unsigned char data) { // программная реализация 
 	BIT_SET(P1OUT, PIN_SCE);
 }
 
-void LcdString(char *characters) {						// вывести строку на экран
+void LcdString(char *characters) {						// РІС‹РІРµСЃС‚Рё СЃС‚СЂРѕРєСѓ РЅР° СЌРєСЂР°РЅ
 	while (*characters)
 		LcdCharacter(*characters++);
 }
 
-void lcd_show_sms(unsigned char a) {					// вывести знак смс
+void lcd_show_sms(unsigned char a) {					// РІС‹РІРµСЃС‚Рё Р·РЅР°Рє СЃРјСЃ
 	unsigned char k;
 
 	Lcd_set_pos_pix(36, 0);
@@ -1118,7 +1118,7 @@ void lcd_show_sms(unsigned char a) {					// вывести знак смс
 			LcdWrite(LCD_D, 0x00);
 }
 
-void lcd_show_call(unsigned char a) {					// вывести знак звонка
+void lcd_show_call(unsigned char a) {					// РІС‹РІРµСЃС‚Рё Р·РЅР°Рє Р·РІРѕРЅРєР°
 	unsigned char k;
 
 	Lcd_set_pos_pix(49, 0);
@@ -1129,27 +1129,27 @@ void lcd_show_call(unsigned char a) {					// вывести знак звонка
 			LcdWrite(LCD_D, 0x00);
 }
 
-void lcd_show_bt(unsigned char a) {						// вывести знак bt
+void lcd_show_bt(unsigned char a) {						// РІС‹РІРµСЃС‚Рё Р·РЅР°Рє bt
 	unsigned char k;
 
 	Lcd_set_pos_pix(63, 0);
 	switch (a) {
-	case 0:							// bt выключен
+	case 0:							// bt РІС‹РєР»СЋС‡РµРЅ
 		for (k = 10; k > 0; k--)
 			LcdWrite(LCD_D, 0x00);
 		break;
-	case 1:							// bt включен
+	case 1:							// bt РІРєР»СЋС‡РµРЅ
 		for (k = 10; k > 0; k--)
 			LcdWrite(LCD_D, bt_ico[0][10 - k]);
 		break;
-	case 2:							// bt включен и подключен
+	case 2:							// bt РІРєР»СЋС‡РµРЅ Рё РїРѕРґРєР»СЋС‡РµРЅ
 		for (k = 10; k > 0; k--)
 			LcdWrite(LCD_D, bt_ico[1][10 - k]);
 		break;
 	}
 }
 
-void lcd_show_bat(unsigned char proc) {					// вывести знак батареи
+void lcd_show_bat(unsigned char proc) {					// РІС‹РІРµСЃС‚Рё Р·РЅР°Рє Р±Р°С‚Р°СЂРµРё
 	unsigned char k;
 
 	Lcd_set_pos_pix(76, 0);
@@ -1157,7 +1157,7 @@ void lcd_show_bat(unsigned char proc) {					// вывести знак батареи
 		LcdWrite(LCD_D, bat_ico[proc][18 - k]);
 }
 
-void lcd_set_time_big() { // отображение времени на начальном экране
+void lcd_set_time_big() { // РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ РІСЂРµРјРµРЅРё РЅР° РЅР°С‡Р°Р»СЊРЅРѕРј СЌРєСЂР°РЅРµ
 	Lcd_set_pos(1, 2);
 	LcdCharacter(dofw[dw-1][0]);
 	LcdCharacter(dofw[dw-1][1]);
@@ -1186,7 +1186,7 @@ void lcd_set_time_big() { // отображение времени на начальном экране
 
 }
 
-void lcd_set_time_small() { // отображение времени в трее
+void lcd_set_time_small() { // РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ РІСЂРµРјРµРЅРё РІ С‚СЂРµРµ
 	unsigned char bukva;
 
 	Lcd_set_pos(0, 0);
@@ -1203,7 +1203,7 @@ void lcd_set_time_small() { // отображение времени в трее
 		lcd_set_time_big();
 }
 
-void lcd_show_main() {		// главный экран - часы
+void lcd_show_main() {		// РіР»Р°РІРЅС‹Р№ СЌРєСЂР°РЅ - С‡Р°СЃС‹
 	current_screen = 0;
 	LcdClear();
 	lcd_show_sms(0);
@@ -1220,7 +1220,7 @@ void lcd_show_main() {		// главный экран - часы
 	call_true = 0;
 }
 //
-//работа с экраном
+//СЂР°Р±РѕС‚Р° СЃ СЌРєСЂР°РЅРѕРј
 //
 
 // i2c
@@ -1232,8 +1232,8 @@ void get_time_from_rtc(void) {
 	TI_USCI_I2C_receive(16, RX);
 	__delay_cycles(80000);
 	TI_USCI_I2C_receiveinit(Slave_Address, 80);
-	TI_USCI_I2C_receive(16, RX);					// чтение данных с ЧРВ
-	if ((RX[6] & 0xff) != 0x00) {					// нет ошибки при чтении из ЧРВ
+	TI_USCI_I2C_receive(16, RX);					// С‡С‚РµРЅРёРµ РґР°РЅРЅС‹С… СЃ Р§Р Р’
+	if ((RX[6] & 0xff) != 0x00) {					// РЅРµС‚ РѕС€РёР±РєРё РїСЂРё С‡С‚РµРЅРёРё РёР· Р§Р Р’
 		s10 = (RX[0] & 0x70) >> 4;
 		s1 = (RX[0] & 0x0f);
 		m10 = (RX[1] & 0x70) >> 4;
@@ -1247,7 +1247,7 @@ void get_time_from_rtc(void) {
 		mo1 = (RX[5] & 0x0f);
 		ye10 = (RX[6] & 0xf0) >> 4;
 		ye1 = (RX[6] & 0x0f);
-		char *Flash_ptrC;							// запись данных во FLASH
+		char *Flash_ptrC;							// Р·Р°РїРёСЃСЊ РґР°РЅРЅС‹С… РІРѕ FLASH
 		Flash_ptrC = (char *) 0x1040;             	// Point to beginning of seg C
 		FCTL2 = FWKEY + FSSEL_1 + FN1;      		// MCLK/3 for Flash Timing Generator
 		FCTL1 = FWKEY + ERASE;                    	// Set Erase bit
@@ -1275,7 +1275,7 @@ void get_time_from_rtc(void) {
 		FCTL1 = FWKEY;                            	// Clear WRT bit
 		FCTL3 = FWKEY + LOCK;             			// Set LOCK
 	} else {
-		char *a;								// чтение данных из FLASH
+		char *a;								// С‡С‚РµРЅРёРµ РґР°РЅРЅС‹С… РёР· FLASH
 		a = (char*) 0x1040;
 		s10 = *a++;
 		s1 = *a++;
@@ -1294,26 +1294,26 @@ void get_time_from_rtc(void) {
 	lcd_set_time_small();
 }
 
-void set_time_to_rtc(void) {			// запишем данные в ЧРВ
+void set_time_to_rtc(void) {			// Р·Р°РїРёС€РµРј РґР°РЅРЅС‹Рµ РІ Р§Р Р’
 	unsigned int counter = 0;
 
-	TX[0] = 0x00; // адрес
-	TX[1] = ((s10 & 0x07) << 4) | (s1 & 0x0f); //сек
-	TX[2] = ((m10 & 0x07) << 4) | (m1 & 0x0f); //мин
-	TX[3] = ((h10 & 0x03) << 4) | (h1 & 0x0f); //час
-	TX[4] = (dw & 0x07); //день недели
-	TX[5] = ((d10 & 0x03) << 4) | (d1 & 0x0f); // дата
-	TX[6] = ((mo10 & 0x01) << 4) | (mo1 & 0x0f); // месяц
-	TX[7] = ((ye10 & 0x0f) << 4) | (ye1 & 0x0f); // год
-	TX[8] = 0x00; //а1
-	TX[9] = 0x00; //а1
-	TX[10] = 0x00; //а1
-	TX[11] = 0x00; //а1
-	TX[12] = 0x00; //а2
-	TX[13] = 0x00; //а2
-	TX[14] = 0x00; //а2
-	TX[15] = 0x00; //00 - 1Гц
-	TX[16] = 0x00; // 00 -все ок
+	TX[0] = 0x00; // Р°РґСЂРµСЃ
+	TX[1] = ((s10 & 0x07) << 4) | (s1 & 0x0f); //СЃРµРє
+	TX[2] = ((m10 & 0x07) << 4) | (m1 & 0x0f); //РјРёРЅ
+	TX[3] = ((h10 & 0x03) << 4) | (h1 & 0x0f); //С‡Р°СЃ
+	TX[4] = (dw & 0x07); //РґРµРЅСЊ РЅРµРґРµР»Рё
+	TX[5] = ((d10 & 0x03) << 4) | (d1 & 0x0f); // РґР°С‚Р°
+	TX[6] = ((mo10 & 0x01) << 4) | (mo1 & 0x0f); // РјРµСЃСЏС†
+	TX[7] = ((ye10 & 0x0f) << 4) | (ye1 & 0x0f); // РіРѕРґ
+	TX[8] = 0x00; //Р°1
+	TX[9] = 0x00; //Р°1
+	TX[10] = 0x00; //Р°1
+	TX[11] = 0x00; //Р°1
+	TX[12] = 0x00; //Р°2
+	TX[13] = 0x00; //Р°2
+	TX[14] = 0x00; //Р°2
+	TX[15] = 0x00; //00 - 1Р“С†
+	TX[16] = 0x00; // 00 -РІСЃРµ РѕРє
 	TI_USCI_I2C_transmitinit(Slave_Address, 80);
 	while ((TI_USCI_I2C_notready()) && (counter++ < 65500))
 		;
@@ -1321,10 +1321,10 @@ void set_time_to_rtc(void) {			// запишем данные в ЧРВ
 }
 // i2c
 
-// меню экрана
-void down_sub_menu(void) {				// измменения в подменю, кнопка вниз
+// РјРµРЅСЋ СЌРєСЂР°РЅР°
+void down_sub_menu(void) {				// РёР·РјРјРµРЅРµРЅРёСЏ РІ РїРѕРґРјРµРЅСЋ, РєРЅРѕРїРєР° РІРЅРёР·
 	switch (current_menu_item) {
-	case 1:	// время
+	case 1:	// РІСЂРµРјСЏ
 		switch (current_sub_menu_item) {
 		case 0:
 			if (--h10 < 0)
@@ -1356,7 +1356,7 @@ void down_sub_menu(void) {				// измменения в подменю, кнопка вниз
 		}
 		menu_setting(current_menu_item);
 		break;
-	case 2:	// подсветка
+	case 2:	// РїРѕРґСЃРІРµС‚РєР°
 		if (pwm_width == 0x0000)
 			pwm_width = 0x0fff;
 		else
@@ -1367,20 +1367,20 @@ void down_sub_menu(void) {				// измменения в подменю, кнопка вниз
 		TACCR2 = pwm_width;
 		menu_setting(current_menu_item);
 		break;
-	case 3:	// контраст
+	case 3:	// РєРѕРЅС‚СЂР°СЃС‚
 		contrast--;
 		if (contrast < 0)
 			contrast = 31;
 		lcd_contrast(contrast);
 		menu_setting(current_menu_item);
 		break;
-	case 4:	// время выключения подсветки
+	case 4:	// РІСЂРµРјСЏ РІС‹РєР»СЋС‡РµРЅРёСЏ РїРѕРґСЃРІРµС‚РєРё
 		timer_off -= 32;
 		if (timer_off < 16)
 			timer_off = 16;
 		menu_setting(current_menu_item);
 		break;
-	case 6:	// дата
+	case 6:	// РґР°С‚Р°
 		switch (current_sub_menu_item) {
 		case 0:
 			if (--dw < 1)
@@ -1396,7 +1396,7 @@ void down_sub_menu(void) {				// измменения в подменю, кнопка вниз
 		case 2:
 			d1--;
 			if ((mo10 == 0) && (mo1 == 2) && (d10 == 2))
-				if ((ye10 * 10 + ye1) & (0x03) == 0x00) {		//высокосный
+				if ((ye10 * 10 + ye1) & (0x03) == 0x00) {		//РІС‹СЃРѕРєРѕСЃРЅС‹Р№
 					if (d1 < 0)
 						d1 = 9;
 				} else {
@@ -1451,9 +1451,9 @@ void down_sub_menu(void) {				// измменения в подменю, кнопка вниз
 
 }
 
-void up_sub_menu(void) {					// измменения в подменю, кнопка вверх
+void up_sub_menu(void) {					// РёР·РјРјРµРЅРµРЅРёСЏ РІ РїРѕРґРјРµРЅСЋ, РєРЅРѕРїРєР° РІРІРµСЂС…
 	switch (current_menu_item) {
-	case 1:		// время
+	case 1:		// РІСЂРµРјСЏ
 		switch (current_sub_menu_item) {
 		case 0:
 			if (++h10 > 2)
@@ -1485,7 +1485,7 @@ void up_sub_menu(void) {					// измменения в подменю, кнопка вверх
 		}
 		menu_setting(current_menu_item);
 		break;
-	case 2:	// подвсетка
+	case 2:	// РїРѕРґРІСЃРµС‚РєР°
 		if (pwm_width == 0x0000)
 			pwm_width = 0x00ff;
 		pwm_width += 0x0100;
@@ -1494,20 +1494,20 @@ void up_sub_menu(void) {					// измменения в подменю, кнопка вверх
 		TACCR2 = pwm_width;
 		menu_setting(current_menu_item);
 		break;
-	case 3:	// контраст
+	case 3:	// РєРѕРЅС‚СЂР°СЃС‚
 		contrast++;
 		if (contrast > 31)
 			contrast = 0;
 		lcd_contrast(contrast);
 		menu_setting(current_menu_item);
 		break;
-	case 4:	// время выключения подсветки
+	case 4:	// РІСЂРµРјСЏ РІС‹РєР»СЋС‡РµРЅРёСЏ РїРѕРґСЃРІРµС‚РєРё
 		timer_off += 32;
 		if (timer_off > 1584)
 			timer_off = 1584;
 		menu_setting(current_menu_item);
 		break;
-	case 6:	// дата
+	case 6:	// РґР°С‚Р°
 		switch (current_sub_menu_item) {
 		case 0:
 			if (++dw > 7)
@@ -1523,7 +1523,7 @@ void up_sub_menu(void) {					// измменения в подменю, кнопка вверх
 		case 2:
 			d1++;
 			if ((mo10 == 0) && (mo1 == 2) && (d10 == 2))
-				if ((ye10 * 10 + ye1) & (0x03) == 0x00) {		//высокосный
+				if ((ye10 * 10 + ye1) & (0x03) == 0x00) {		//РІС‹СЃРѕРєРѕСЃРЅС‹Р№
 					if (d1 > 9)
 						d1 = 0;
 				} else {
@@ -1577,11 +1577,11 @@ void up_sub_menu(void) {					// измменения в подменю, кнопка вверх
 	}
 }
 
-void menu_setting(unsigned char submenu) {						// перемешение по меню
+void menu_setting(unsigned char submenu) {						// РїРµСЂРµРјРµС€РµРЅРёРµ РїРѕ РјРµРЅСЋ
 	unsigned int stroka;
 
 	switch (submenu) {
-	case 0:												// само меню
+	case 0:												// СЃР°РјРѕ РјРµРЅСЋ
 		clear_1();
 		current_screen = 2;
 		for (stroka = 8; stroka > 1; stroka--) {
@@ -1594,7 +1594,7 @@ void menu_setting(unsigned char submenu) {						// перемешение по меню
 				LcdString((char*) Main_menu[8 - stroka]);
 		}
 		break;
-	case 1:												// время
+	case 1:												// РІСЂРµРјСЏ
 		current_screen = 3;
 		if (current_sub_menu_item == 6) {
 			set_time = 1;
@@ -1641,7 +1641,7 @@ void menu_setting(unsigned char submenu) {						// перемешение по меню
 			LcdCharacter(s1 + 0x30);
 		}
 		break;
-	case 2:												// яркость
+	case 2:												// СЏСЂРєРѕСЃС‚СЊ
 		clear_1();
 		current_screen = 3;
 		if (current_sub_menu_item == 1)
@@ -1659,7 +1659,7 @@ void menu_setting(unsigned char submenu) {						// перемешение по меню
 			}
 		}
 		break;
-	case 3:												// контрастность
+	case 3:												// РєРѕРЅС‚СЂР°СЃС‚РЅРѕСЃС‚СЊ
 		clear_1();
 		current_screen = 3;
 		if (current_sub_menu_item == 1)
@@ -1683,7 +1683,7 @@ void menu_setting(unsigned char submenu) {						// перемешение по меню
 			}
 		}
 		break;
-	case 4:												// время выкл
+	case 4:												// РІСЂРµРјСЏ РІС‹РєР»
 		clear_1();
 		current_screen = 3;
 		if (current_sub_menu_item == 1)
@@ -1706,7 +1706,7 @@ void menu_setting(unsigned char submenu) {						// перемешение по меню
 			}
 		}
 		break;
-	case 5:												// бт выкл
+	case 5:												// Р±С‚ РІС‹РєР»
 		if (BIT_TEST(P2OUT, BT_PWR)) {
 			BIT_CLR(P2OUT, BT_PWR);
 			BIT_CLR(P3OUT, BT_PWR);
@@ -1720,7 +1720,7 @@ void menu_setting(unsigned char submenu) {						// перемешение по меню
 			bt_on = 1;
 		}
 		break;
-	case 6:												// дата
+	case 6:												// РґР°С‚Р°
 		current_screen = 3;
 		if (current_sub_menu_item == 7) {
 			set_time = 1;
@@ -1778,9 +1778,9 @@ void menu_setting(unsigned char submenu) {						// перемешение по меню
 			LcdCharacter(ye1 + 0x30);
 		}
 		break;
-	case 7:												// время с телефона
+	case 7:												// РІСЂРµРјСЏ СЃ С‚РµР»РµС„РѕРЅР°
 		time_from_phone = 1;
 		break;
 	}
 }
-// меню экрана
+// РјРµРЅСЋ СЌРєСЂР°РЅР°
